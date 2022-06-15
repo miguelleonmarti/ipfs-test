@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import Uploader from "../components/Uploader";
 
 export default function Home() {
+  const [signer, setSigner] = useState(null);
   const [address, setAddress] = useState(null);
+  const [chainId, setChainId] = useState(null);
   const [element, setElement] = useState(null);
 
   useEffect(() => {
@@ -14,8 +17,12 @@ export default function Home() {
       await window.ethereum.request({ method: "eth_requestAccounts" });
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
+      const chainId = await signer.getChainId();
       const address = await signer.getAddress();
+      setSigner(signer);
       setAddress(address);
+      setChainId(chainId);
+      console.log("HOLAAA");
     } catch (error) {
       console.log(error);
     }
@@ -25,5 +32,16 @@ export default function Home() {
     return <div>Please install an ethereum wallet</div>;
   }
 
-  return <div>{address ? <div>{address}</div> : <button onClick={connectWallet}>Connect</button>}</div>;
+  return (
+    <div>
+      {signer ? (
+        <div>
+          <div>{address}</div>
+          <Uploader chainId={chainId} signer={signer} />
+        </div>
+      ) : (
+        <button onClick={connectWallet}>Connect</button>
+      )}
+    </div>
+  );
 }
