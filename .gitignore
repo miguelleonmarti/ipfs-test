@@ -11,3 +11,6 @@ artifacts
 #Client files
 client/hardhat
 client/build-info
+
+# cache
+solidity-files-cache.json
