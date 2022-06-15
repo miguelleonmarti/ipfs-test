@@ -7,3 +7,7 @@ typechain
 #Hardhat files
 cache
 artifacts
+
+#Client files
+client/hardhat
+client/build-info
