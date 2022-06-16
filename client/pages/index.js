@@ -1,32 +1,15 @@
-import { useState, useEffect } from "react";
-import { ethers } from "ethers";
+import { useState, useEffect, useContext } from "react";
+import { Web3Context } from "../hooks/Web3Context";
 import Uploader from "../components/Uploader";
+import UserImage from "../components/UserImage";
 
 export default function Home() {
-  const [signer, setSigner] = useState(null);
-  const [address, setAddress] = useState(null);
-  const [chainId, setChainId] = useState(null);
+  const { signer, chainId, address, connectWallet } = useContext(Web3Context);
   const [element, setElement] = useState(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") setElement(window);
   }, []);
-
-  async function connectWallet() {
-    try {
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const chainId = await signer.getChainId();
-      const address = await signer.getAddress();
-      setSigner(signer);
-      setAddress(address);
-      setChainId(chainId);
-      console.log("HOLAAA");
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   if (!element?.ethereum) {
     return <div>Please install an ethereum wallet</div>;
@@ -36,8 +19,9 @@ export default function Home() {
     <div>
       {signer ? (
         <div>
-          <div>{address}</div>
+          {address}
           <Uploader chainId={chainId} signer={signer} />
+          <UserImage />
         </div>
       ) : (
         <button onClick={connectWallet}>Connect</button>
