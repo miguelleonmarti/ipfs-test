@@ -21,4 +21,9 @@ module.exports = {
   paths: {
     artifacts: "./client",
   },
+  networks: {
+    hardhat: {
+      chainId: 1337,
+    },
+  },
 };
